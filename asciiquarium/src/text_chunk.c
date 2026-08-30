@@ -41,15 +41,11 @@ TextDimension calculate_text_chunk_length_and_height(char text_chunk)
     return result;
 }
 
-PrintResult print_text_chunk(char text_chunk, bool is_flipped, Position *pos)
+PrintResult print_text_chunk(char text_chunk, Position *pos)
 {
     if (check_if_text_chunk_in_bounds(calculate_text_chunk_length_and_height(text_chunk), pos))
     {
-        char *text = is_flipped
-                   ? get_flipped_text_chunk_text(text_chunk)
-                   : get_text_chunk_text(text_chunk);
-
-        add_text_to_render(text, pos);
+        add_text_to_render(text_chunk, pos);
         return PRINT_SUCCESS;
     }
     else

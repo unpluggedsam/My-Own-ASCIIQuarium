@@ -62,8 +62,8 @@ void run_animations(AnimationList *animation_stack)
             &animation_stack->items[i];
 
   
-            object->previous_x = object->x;
-            object->previous_y = object->y;
+            object->previous_pos->x = object->pos->x;
+            object->previous_pos->y = object->pos->y;
 
             animation_function[object->animation_type](object);
             delete_text_chunk(object->text_chunk_type, object->previous_x, object->previous_y);
@@ -84,11 +84,12 @@ void run_animations(AnimationList *animation_stack)
 }
 
 void add_randomized_fish_animations(AnimationList *animation_stack, int amount_of_fish) {
-    for(int i = 0; i < amount_of_fish; i++) {
-        int type_of_fish = rand() % TEXT_CHUNK_COUNT;
-    }
+    // for(int i = 0; i < amount_of_fish; i++) {
+    //     int type_of_fish = rand() % TEXT_CHUNK_COUNT;
+    // }
 }
-aa
+
+
 void add_animation_object_to_stack(AnimationObject animation_object)
 {
     if (animation_stack.count == animation_stack.capacity)
@@ -113,14 +114,17 @@ void create_animation_object(AnimationObjectType animation_object_type, int anim
 {
     AnimationObject animation_object;
     animation_object.pos = &pos;
-    animation_object.text_chunk = get_text_chunk(animation_object_type, animation_object_type_ID);
     animation_object.update_animation = get_animation_update_function(animation_type, &animation_object);
     Position previous_pos = { .x = -1, .y = -1 };
     animation_object.previous_pos = &previous_pos;
     animation_object.speed = speed;
-    animation_object.is_flipped = animation_type == CLASSIC_LEFT ? true : false;
 
-    
+    animation_object.dimension = calculate_text_chunk_length_and_height(animation_object.text_chunk);
+
+    animation_object.text_chunk = animation_type == CLASSIC_LEFT
+                   ? get_flipped_text_chunk_text(animation_object_type, animation_object_type_ID)
+                   : get_text_chunk_text(animation_object_type, animation_object_type_ID);
+
     correct_animation_object_bounds_error(&animation_object);
     add_animation_object_to_stack(animation_object);
 }
@@ -128,27 +132,27 @@ void create_animation_object(AnimationObjectType animation_object_type, int anim
 void correct_animation_object_bounds_error(AnimationObject *animation_object)
 {
 
-    PrintResult p_result = check_out_of_bounds_direction(animation_object->dimension, animation_object->x, animation_object->y);
+    PrintResult p_result = check_out_of_bounds_direction(animation_object);
 
     while (p_result != IN_BOUNDS)
     {
         if (p_result == X_FAR_LEFT)
         {
-            animation_object->x++;
+            animation_object->pos->x++;
         }
         if (p_result == X_FAR_RIGHT)
         {
-            animation_object->x--;
+            animation_object->pos->x--;
         }
         if (p_result == Y_FAR_UP)
         {
-            animation_object->y--;
+            animation_object->pos->y--;
         }
         if (p_result == Y_FAR_DOWN)
         {
-            animation_object->y++;
+            animation_object->pos->y++;
         }
-        p_result = check_out_of_bounds_direction(animation_object->dimension, animation_object->x, animation_object->y);
+        p_result = check_out_of_bounds_direction(animation_object->dimension, animation_object->pos->x, animation_object->pos->y);
     }
 }
 

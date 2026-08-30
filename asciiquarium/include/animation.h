@@ -29,7 +29,7 @@ typedef struct
     Position *previous_pos;
 
     int speed;
-    bool is_flipped;
+    TextDimension dimension;
 
 } AnimationObject;
 
