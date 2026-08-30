@@ -66,7 +66,8 @@ void delete_text_chunk(char text_chunk, Position *origin)
     {
         for (int y = 0; y <= text_dimensions.height; y++)
         {
-            delete_text_from_render(origin->x + x, origin->y + y);
+            Position pos = { .x = origin->x + x, .y = origin->y + y };
+            delete_text_from_render(&pos);
         }
     }
 }
