@@ -1,0 +1,272 @@
+#include "ASCIIQuarium.h"
+#include <string.h>
+
+extern char *(*text_chunk_functions[TEXT_CHUNK_COUNT])(void);
+
+/* This function calculates the width and height of a textchunk. It tracks
+the height by counting the amount of newline escape characters it uses,
+and finds the width by calculating the longest distance between newline
+escape characters.*/
+
+TextDimension calculate_text_chunk_length_and_height(TextChunkType text_chunk)
+{
+
+    char *text = get_text_chunk_text(text_chunk);
+
+    int highest_width = 0;
+    int current_width = 0;
+    int height = 0;
+
+    for (int i = 0; get_text_chunk_text(text_chunk)[i] != '\0'; i++)
+    {
+        if (text[i] == '\n')
+        {
+            height++;
+            if (current_width > highest_width)
+            {
+                highest_width = current_width;
+            }
+            current_width = 0;
+        } else {
+            current_width++;
+        }
+    }
+
+    if (current_width > highest_width)
+        highest_width = current_width;
+
+    TextDimension result;
+    result.height = height;
+    result.width = highest_width;
+    return result;
+}
+
+PrintResult print_text_chunk(TextChunkType text_chunk, bool is_flipped, int x, int y)
+{
+    if (check_if_text_chunk_in_bounds(calculate_text_chunk_length_and_height(text_chunk), x, y))
+    {
+        char *text = is_flipped
+                   ? get_flipped_text_chunk_text(text_chunk)
+                   : get_text_chunk_text(text_chunk);
+
+        add_text_to_render(text, x, y);
+        return PRINT_SUCCESS;
+    }
+    else
+    {
+        return PRINT_OUT_OF_BOUNDS;
+    }
+}
+
+void delete_text_chunk(TextChunkType text_chunk, int origin_x, int origin_y)
+{
+    TextDimension text_dimensions = calculate_text_chunk_length_and_height(text_chunk);
+    for (int x = 0; x <= text_dimensions.width; x++)
+    {
+        for (int y = 0; y <= text_dimensions.height; y++)
+        {
+            delete_text_from_render(origin_x + x, origin_y + y);
+        }
+    }
+}
+
+bool check_if_text_chunk_in_bounds(TextDimension dimension, int x, int y)
+{
+    return check_out_of_bounds_direction(dimension, x, y) == IN_BOUNDS ? true : false;
+}
+
+BoundsResult check_out_of_bounds_direction(TextDimension dimension, int x, int y)
+{
+
+    if (x <= 1)
+    {
+        return X_FAR_LEFT;
+    }
+    else if (x + dimension.width >= frame_x - 1)
+    {
+        return X_FAR_RIGHT;
+    }
+
+    else if (y + dimension.height >= frame_y - 1)
+    {
+        Y_FAR_DOWN;
+    }
+
+    else if (y <= 1)
+    {
+        Y_FAR_UP;
+    }
+    else
+    {
+        return IN_BOUNDS;
+    }
+}
+
+char *flip_text_chunk(const char *text)
+{
+    int length = strlen(text);
+
+    // Find the widest line.
+    int width = 0;
+    int line_width = 0;
+
+    for (int i = 0; i <= length; i++)
+    {
+        if (text[i] == '\n' || text[i] == '\0')
+        {
+            if (line_width > width)
+                width = line_width;
+
+            line_width = 0;
+        }
+        else
+        {
+            line_width++;
+        }
+    }
+
+    // Count lines.
+    int height = 1;
+
+    for (int i = 0; i < length; i++)
+    {
+        if (text[i] == '\n')
+            height++;
+    }
+
+    // Every line gets width characters plus a newline.
+    char *flipped = malloc((width + 1) * height + 1);
+
+    if (flipped == NULL)
+        return NULL;
+
+    int output = 0;
+    int line_start = 0;
+
+    for (int y = 0; y < height; y++)
+    {
+        // Find end of this line.
+        int line_end = line_start;
+
+        while (text[line_end] != '\n' &&
+               text[line_end] != '\0')
+        {
+            line_end++;
+        }
+
+        line_width = line_end - line_start;
+
+        /*
+         * Read the line from right to left.
+         *
+         * Characters outside the line are treated as spaces.
+         */
+        for (int x = width - 1; x >= 0; x--)
+        {
+            if (x < line_width)
+                flipped[output++] =
+                    flip_character(text[line_start + x]);
+            else
+                flipped[output++] = ' ';
+        }
+
+        // Remove trailing spaces from the flipped line.
+        while (output > 0 && flipped[output - 1] == ' ')
+            output--;
+
+        if (y < height - 1)
+            flipped[output++] = '\n';
+
+        line_start = line_end;
+
+        if (text[line_start] == '\n')
+            line_start++;
+    }
+
+    flipped[output] = '\0';
+
+    return flipped;
+}
+
+char flip_character(char c)
+{
+    switch (c)
+    {
+        case '/': return '\\';
+        case '\\': return '/';
+
+        case '<': return '>';
+        case '>': return '<';
+
+        case '(': return ')';
+        case ')': return '(';
+
+        case '[': return ']';
+        case ']': return '[';
+
+        case '{': return '}';
+        case '}': return '{';
+
+        default: return c;
+    }
+}
+
+char *get_text_chunk_text(TextChunkType text_chunk)
+{
+    return text_chunk_functions[text_chunk]();
+}
+
+char *get_flipped_text_chunk_text(TextChunkType text_chunk)
+{
+    return flip_text_chunk(get_text_chunk_text(text_chunk));
+}
+
+char *small_fish_one(void)
+{
+    return "><(((o>";
+}
+
+char *small_fish_two(void)
+{
+    return "><((o))>";
+}
+
+char *small_fish_three(void)
+{
+    return "><((o)))>";
+}
+
+char *large_fish_one(void)
+{
+    return "      __\n"
+           "  ___/  \\__\n"
+           " /         _\\\n"
+           "<          _)\n"
+           " \\________/\n";
+}
+
+char *large_fish_two(void)
+{
+    return "       ___\n"
+           "  ____/   \\___\n"
+           " /           _\\\n"
+           "<           _)\n"
+           " \\_________/\n";
+}
+
+char *large_fish_three(void)
+{
+    return "        ___\n"
+           "   ____/   \\____\n"
+           "  /             _\\\n"
+           " <       o      _)\n"
+           "  \\____________/\n";
+}
+
+char *(*text_chunk_functions[TEXT_CHUNK_COUNT])(void) = {
+    [SMALL_FISH_ONE] = small_fish_one,
+    [SMALL_FISH_TWO] = small_fish_two,
+    [SMALL_FISH_THREE] = small_fish_three,
+    [LARGE_FISH_ONE] = large_fish_one,
+    [LARGE_FISH_TWO] = large_fish_two,
+    [LARGE_FISH_THREE] = large_fish_three};
