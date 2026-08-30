@@ -1,9 +1,10 @@
 #ifndef TEXT_CHUNK_H
 #define TEXT_CHUNK_H
 
+
 typedef enum
 {
-    SMALL_FISH_ONE = 0,
+    SMALL_FISH_ONE,
     SMALL_FISH_TWO,
     SMALL_FISH_THREE,
 
@@ -14,6 +15,11 @@ typedef enum
     TEXT_CHUNK_COUNT
 } TextChunkType;
 
+typedef enum
+{
+    PRINT_SUCCESS,
+    PRINT_OUT_OF_BOUNDS
+} PrintResult;
 
 typedef struct
 {
