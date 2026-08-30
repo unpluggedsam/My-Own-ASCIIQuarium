@@ -1,5 +1,6 @@
 #include "ASCIIQuarium.h"
 #include <string.h>
+#include <stdbool.h>
 
 extern char *(*text_chunk_functions[TEXT_CHUNK_COUNT])(void);
 
@@ -8,7 +9,7 @@ the height by counting the amount of newline escape characters it uses,
 and finds the width by calculating the longest distance between newline
 escape characters.*/
 
-TextDimension calculate_text_chunk_length_and_height(TextChunkType text_chunk)
+TextDimension calculate_text_chunk_length_and_height(char text_chunk)
 {
 
     char *text = get_text_chunk_text(text_chunk);
@@ -41,7 +42,7 @@ TextDimension calculate_text_chunk_length_and_height(TextChunkType text_chunk)
     return result;
 }
 
-PrintResult print_text_chunk(TextChunkType text_chunk, bool is_flipped, Position *pos)
+PrintResult print_text_chunk(char text_chunk, bool is_flipped, Position *pos)
 {
     if (check_if_text_chunk_in_bounds(calculate_text_chunk_length_and_height(text_chunk), pos->x, pos->y))
     {
@@ -58,7 +59,7 @@ PrintResult print_text_chunk(TextChunkType text_chunk, bool is_flipped, Position
     }
 }
 
-void delete_text_chunk(TextChunkType text_chunk, Position *origin)
+void delete_text_chunk(char text_chunk, Position *origin)
 {
     TextDimension text_dimensions = calculate_text_chunk_length_and_height(text_chunk);
     for (int x = 0; x <= text_dimensions.width; x++)
@@ -72,7 +73,7 @@ void delete_text_chunk(TextChunkType text_chunk, Position *origin)
 
 bool check_if_text_chunk_in_bounds(TextDimension dimension, Position *pos)
 {
-    return check_out_of_bounds_direction(dimension, pos->x, pos->y) == IN_BOUNDS ? true : false;
+    return check_out_of_bounds_direction(dimension, pos) == IN_BOUNDS ? true : false;
 }
 
 BoundsResult check_out_of_bounds_direction(TextDimension dimension, Position *pos)
