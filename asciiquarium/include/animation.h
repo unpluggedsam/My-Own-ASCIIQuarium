@@ -9,6 +9,9 @@ typedef char *(*AnimationObjectGetter)(int objectID);
 extern AnimationObjectGetter
     animation_object_linker[ANIMATION_OBJECT_TYPE_COUNT];
 
+extern int frame_x;
+extern int frame_y;
+
 typedef enum
 {
     CLASSIC_LEFT,
@@ -22,8 +25,7 @@ typedef void *(*AnimationUpdateFunction)(AnimationObject *);
 
 typedef struct
 {
-
-    void *update_animation;
+    AnimationUpdateFunction update_animation;
     char *text_chunk;   
     Position *pos;
     Position *previous_pos;
@@ -64,7 +66,6 @@ typedef enum
 
 
 void add_animation_object_to_stack(
-    AnimationList *animations,
     AnimationObject object
 );
 

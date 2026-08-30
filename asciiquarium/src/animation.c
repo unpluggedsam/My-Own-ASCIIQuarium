@@ -65,10 +65,10 @@ void run_animations(AnimationList *animation_stack)
             object->previous_pos->x = object->pos->x;
             object->previous_pos->y = object->pos->y;
 
-            animation_function[object->animation_type](object);
-            delete_text_chunk(object->text_chunk_type, object->previous_x, object->previous_y);
+            object->update_animation(object);
+            delete_text_chunk(object->text_chunk, object->previous_pos);
 
-            if (print_text_chunk(object->text_chunk_type, object->is_flipped, object->x, object->y) == PRINT_SUCCESS)
+            if (print_text_chunk(object->text_chunk, object->pos) == PRINT_SUCCESS)
             {
                 i++;
             }

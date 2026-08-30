@@ -8,18 +8,16 @@ the height by counting the amount of newline escape characters it uses,
 and finds the width by calculating the longest distance between newline
 escape characters.*/
 
-TextDimension calculate_text_chunk_length_and_height(char text_chunk)
+TextDimension calculate_text_chunk_length_and_height(char *text_chunk)
 {
-
-    char *text = get_text_chunk_text(text_chunk);
 
     int highest_width = 0;
     int current_width = 0;
     int height = 0;
 
-    for (int i = 0; get_text_chunk_text(text_chunk)[i] != '\0'; i++)
+    for (int i = 0; text_chunk[i] != '\0'; i++)
     {
-        if (text[i] == '\n')
+        if (text_chunk[i] == '\n')
         {
             height++;
             if (current_width > highest_width)
@@ -41,11 +39,11 @@ TextDimension calculate_text_chunk_length_and_height(char text_chunk)
     return result;
 }
 
-PrintResult print_text_chunk(char text_chunk, Position *pos)
+PrintResult print_text_chunk(char *text_chunk, Position *pos)
 {
     if (check_if_text_chunk_in_bounds(calculate_text_chunk_length_and_height(text_chunk), pos))
     {
-        add_text_to_render(text_chunk, pos);
+        add_text_to_render(text_chunk, pos->x, pos->y);
         return PRINT_SUCCESS;
     }
     else
@@ -54,15 +52,14 @@ PrintResult print_text_chunk(char text_chunk, Position *pos)
     }
 }
 
-void delete_text_chunk(char text_chunk, Position *origin)
+void delete_text_chunk(char *text_chunk, Position *origin)
 {
     TextDimension text_dimensions = calculate_text_chunk_length_and_height(text_chunk);
     for (int x = 0; x <= text_dimensions.width; x++)
     {
         for (int y = 0; y <= text_dimensions.height; y++)
         {
-            Position pos = { .x = origin->x + x, .y = origin->y + y };
-            delete_text_from_render(&pos);
+            delete_text_from_render(origin->x + x, origin->y + y);
         }
     }
 }

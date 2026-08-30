@@ -19,7 +19,7 @@ TextDimension calculate_text_chunk_length_and_height(
     char text_chunk
 );
 
-void print_text_chunk(
+PrintResult print_text_chunk(
     char text_chunk,
     Position *pos
 );  
@@ -28,5 +28,11 @@ void delete_text_chunk(
     char text_chunk,
     Position *pos
 );
+
+typedef struct {
+    int x;
+    int y;
+} Position;
+
 
 #endif

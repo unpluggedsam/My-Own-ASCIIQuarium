@@ -17,11 +17,9 @@ void run_program(void) {
 
     synchronize_coordinates();
     build_frame(200, 20);
-   
-    create_animation_object(LARGE_FISH_ONE, CLASSIC_RIGHT, 1, 1, 11);
-     
-    create_animation_object(SMALL_FISH_THREE, CLASSIC_LEFT, 2, 3, 11);
-
+    
+    Position pos1 = { .x = 1, .y = 11 };
+    create_animation_object(FISH, 3, CLASSIC_RIGHT, 2, pos1);
    
 }
 
