@@ -109,7 +109,7 @@ void add_animation_object_to_stack(AnimationObject animation_object)
     animation_stack.count++;
 }
 
-void create_animation_object(TextChunkType text_chunk_type, AnimationType animation_type, int speed, int x, int y)
+void create_animation_object(TextChunkType text_chunk_type, AnimationType animation_type, int speed, Position *pos)
 {
     AnimationObject animation_object;
     animation_object.text_chunk_type = text_chunk_type;
@@ -118,8 +118,8 @@ void create_animation_object(TextChunkType text_chunk_type, AnimationType animat
     animation_object.previous_x = -1;
     animation_object.previous_y = -1;
     animation_object.speed = speed;
-    animation_object.x = x;
-    animation_object.y = y;
+    animation_object.x = pos->x;
+    animation_object.y = pos->y;
     animation_object.is_flipped = animation_type == CLASSIC_LEFT ? true : false;
     correct_animation_object_bounds_error(&animation_object);
     add_animation_object_to_stack(animation_object);

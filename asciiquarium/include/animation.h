@@ -13,11 +13,9 @@ typedef enum
 
 typedef struct
 {
-    AnimationType animation_type;
     int animationID;
     void *update_animation;
     char *text_chunk;
-    TextDimension dimension;
 
     int x;
     int y;

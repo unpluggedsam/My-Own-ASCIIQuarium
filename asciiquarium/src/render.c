@@ -16,15 +16,15 @@ int cursor_y = 0;
 int x;
 int y;
 
-void add_text_to_render(char text[], int x, int y)
+void add_text_to_render(char text[], Position *pos)
 {
-    set_cursor_on_render(x, y);
+    set_cursor_on_render(pos);
 
     for (int i = 0; text[i] != '\0'; i++) {
 
         if (text[i] == '\n') {
             y++;
-            set_cursor_on_render(x, y);
+            set_cursor_on_render(pos);
         }
         else {
             char character[2] = { text[i], '\0' };
@@ -51,17 +51,17 @@ void buffer_write(const char *text)
     output_buffer[output_buffer_position] = '\0';
 }
 
-void delete_text_from_render(int x, int y) {
-    add_text_to_render(" ", x, y);
+void delete_text_from_render(Position *pos) {
+    add_text_to_render(" ", pos);
 }
 
 
-void set_cursor_on_render(int cursor_x, int cursor_y)
+void set_cursor_on_render(Position *pos)
 {
     char cursor_command[32];
 
-    int target_x = x + cursor_x;
-    int target_y = y + cursor_y;
+    int target_x = pos->x + cursor_x;
+    int target_y = pos->y + cursor_y;
 
     snprintf(
         cursor_command,

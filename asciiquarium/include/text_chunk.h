@@ -21,14 +21,12 @@ TextDimension calculate_text_chunk_length_and_height(
 
 void print_text_chunk(
     TextChunkType text_chunk,
-    int x,
-    int y
-);
+    Position *pos
+);  
 
 void delete_text_chunk(
     TextChunkType text_chunk,
-    int x,
-    int y
+    Position *pos
 );
 
 #endif

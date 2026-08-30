@@ -41,15 +41,15 @@ TextDimension calculate_text_chunk_length_and_height(TextChunkType text_chunk)
     return result;
 }
 
-PrintResult print_text_chunk(TextChunkType text_chunk, bool is_flipped, int x, int y)
+PrintResult print_text_chunk(TextChunkType text_chunk, bool is_flipped, Position *pos)
 {
-    if (check_if_text_chunk_in_bounds(calculate_text_chunk_length_and_height(text_chunk), x, y))
+    if (check_if_text_chunk_in_bounds(calculate_text_chunk_length_and_height(text_chunk), pos->x, pos->y))
     {
         char *text = is_flipped
                    ? get_flipped_text_chunk_text(text_chunk)
                    : get_text_chunk_text(text_chunk);
 
-        add_text_to_render(text, x, y);
+        add_text_to_render(text, pos->x, pos->y);
         return PRINT_SUCCESS;
     }
     else
@@ -58,43 +58,43 @@ PrintResult print_text_chunk(TextChunkType text_chunk, bool is_flipped, int x, i
     }
 }
 
-void delete_text_chunk(TextChunkType text_chunk, int origin_x, int origin_y)
+void delete_text_chunk(TextChunkType text_chunk, Position *origin)
 {
     TextDimension text_dimensions = calculate_text_chunk_length_and_height(text_chunk);
     for (int x = 0; x <= text_dimensions.width; x++)
     {
         for (int y = 0; y <= text_dimensions.height; y++)
         {
-            delete_text_from_render(origin_x + x, origin_y + y);
+            delete_text_from_render(origin->x + x, origin->y + y);
         }
     }
 }
 
-bool check_if_text_chunk_in_bounds(TextDimension dimension, int x, int y)
+bool check_if_text_chunk_in_bounds(TextDimension dimension, Position *pos)
 {
-    return check_out_of_bounds_direction(dimension, x, y) == IN_BOUNDS ? true : false;
+    return check_out_of_bounds_direction(dimension, pos->x, pos->y) == IN_BOUNDS ? true : false;
 }
 
-BoundsResult check_out_of_bounds_direction(TextDimension dimension, int x, int y)
+BoundsResult check_out_of_bounds_direction(TextDimension dimension, Position *pos)
 {
 
-    if (x <= 1)
+    if (pos->x <= 1)
     {
         return X_FAR_LEFT;
     }
-    else if (x + dimension.width >= frame_x - 1)
+    else if (pos->x + dimension.width >= frame_x - 1)
     {
         return X_FAR_RIGHT;
     }
 
-    else if (y + dimension.height >= frame_y - 1)
+    else if (pos->y + dimension.height >= frame_y - 1)
     {
-        Y_FAR_DOWN;
+        return Y_FAR_DOWN;
     }
 
-    else if (y <= 1)
+    else if (pos->y <= 1)
     {
-        Y_FAR_UP;
+        return Y_FAR_UP;
     }
     else
     {
