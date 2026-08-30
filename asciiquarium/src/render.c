@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "ASCIIQuarium.h"
+#include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
 #include <string.h>
