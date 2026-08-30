@@ -4,19 +4,6 @@
 
 typedef enum
 {
-    SMALL_FISH_ONE,
-    SMALL_FISH_TWO,
-    SMALL_FISH_THREE,
-
-    LARGE_FISH_ONE,
-    LARGE_FISH_TWO,
-    LARGE_FISH_THREE,
-
-    TEXT_CHUNK_COUNT
-} TextChunkType;
-
-typedef enum
-{
     PRINT_SUCCESS,
     PRINT_OUT_OF_BOUNDS
 } PrintResult;

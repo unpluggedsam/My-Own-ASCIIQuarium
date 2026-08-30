@@ -13,14 +13,16 @@ typedef enum
 
 typedef struct
 {
-    TextChunkType text_chunk_type;
     AnimationType animation_type;
+    int animationID;
+    void *update_animation;
+    char *text_chunk;
     TextDimension dimension;
 
     int x;
     int y;
 
-    int alive;
+    int speed;
 } AnimationObject;
 
 typedef struct
