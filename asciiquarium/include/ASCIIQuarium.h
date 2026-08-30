@@ -6,4 +6,9 @@
 #include "text_chunk.h"
 
 
+// animation types
+#include "animation_object_types/fish.h"
+#include "animation_object_types/seaweed.h"
+#include "animation_object_types/bubble.h"
+
 #endif

@@ -16,16 +16,16 @@ typedef struct
 
 
 TextDimension calculate_text_chunk_length_and_height(
-    TextChunkType text_chunk
+    char text_chunk
 );
 
 void print_text_chunk(
-    TextChunkType text_chunk,
+    char text_chunk,
     Position *pos
 );  
 
 void delete_text_chunk(
-    TextChunkType text_chunk,
+    char text_chunk,
     Position *pos
 );
 
