@@ -2,25 +2,35 @@
 #define ANIMATION_H
 
 #include "text_chunk.h"
+#include <stdbool.h>
+
+typedef char *(*AnimationObjectGetter)(int objectID);
+
+extern AnimationObjectGetter
+    animation_object_linker[ANIMATION_OBJECT_TYPE_COUNT];
 
 typedef enum
 {
     CLASSIC_LEFT,
     CLASSIC_RIGHT,
     CLASSIC_UP,
-    CLASSIC_DOWN
+    CLASSIC_DOWN, 
+    ANIMATION_TYPE_COUNT
 } AnimationType;
+
+typedef void *(*AnimationUpdateFunction)(AnimationObject *);
 
 typedef struct
 {
-    int animationID;
-    void *update_animation;
-    char *text_chunk;
 
-    int x;
-    int y;
+    void *update_animation;
+    char *text_chunk;   
+    Position *pos;
+    Position *previous_pos;
 
     int speed;
+    bool is_flipped;
+
 } AnimationObject;
 
 typedef struct
@@ -30,6 +40,27 @@ typedef struct
     int count;
     int capacity;
 } AnimationList;
+
+typedef enum
+{
+    IN_BOUNDS,
+    X_FAR_LEFT,
+    X_FAR_RIGHT,
+    Y_FAR_UP,
+    Y_FAR_DOWN
+} BoundsResult;
+
+/*
+ * Animation object types
+ */
+typedef enum
+{
+    FISH,
+    SEAWEED,
+    BUBBLE,
+    ANIMATION_OBJECT_TYPE_COUNT
+} AnimationObjectType;
+
 
 
 void add_animation_object_to_stack(

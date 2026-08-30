@@ -11,3 +11,5 @@ typedef enum
     FISH_TYPE_COUNT
 
 } FishType;
+
+extern char *get_fish(int objectID);

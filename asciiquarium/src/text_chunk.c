@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-extern char *(*text_chunk_functions[TEXT_CHUNK_COUNT])(void);
 
 /* This function calculates the width and height of a textchunk. It tracks
 the height by counting the amount of newline escape characters it uses,
@@ -213,13 +212,15 @@ char flip_character(char c)
     }
 }
 
-char *get_text_chunk_text(TextChunkType text_chunk)
-{
-    return text_chunk_functions[text_chunk]();
+char *get_text_chunk(AnimationObjectType animation_object_type, int objectID) {
+
+    return animation_object_linker[animation_object_type](objectID);
+
 }
 
-char *get_flipped_text_chunk_text(TextChunkType text_chunk)
+
+char *get_flipped_text_chunk_text(AnimationObjectType animation_object_type, int objectID)
 {
-    return flip_text_chunk(get_text_chunk_text(text_chunk));
+    return flip_text_chunk(get_text_chunk(animation_object_type, objectID));
 }
 

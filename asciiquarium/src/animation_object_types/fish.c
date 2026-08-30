@@ -1,13 +1,18 @@
 #include "ASCIIQuarium.h"
 
 
-char *(*text_chunk_functions[FISH_TYPE_COUNT])(void) = {
+char *(*fish_type_linker[FISH_TYPE_COUNT])(void) = {
     [SMALL_FISH_ONE] = small_fish_one,
     [SMALL_FISH_TWO] = small_fish_two,
     [SMALL_FISH_THREE] = small_fish_three,
     [LARGE_FISH_ONE] = large_fish_one,
     [LARGE_FISH_TWO] = large_fish_two,
-    [LARGE_FISH_THREE] = large_fish_three};
+    [LARGE_FISH_THREE] = large_fish_three
+};
+
+char *get_fish(int objectID) {
+    return fish_type_linker[objectID]();
+}
     
     
     char *small_fish_one(void)

@@ -109,18 +109,18 @@ void add_animation_object_to_stack(AnimationObject animation_object)
     animation_stack.count++;
 }
 
-void create_animation_object(TextChunkType text_chunk_type, AnimationType animation_type, int speed, Position *pos)
+void create_animation_object(AnimationObjectType animation_object_type, int animation_object_type_ID, AnimationType animation_type, int speed, Position *pos)
 {
     AnimationObject animation_object;
-    animation_object.text_chunk_type = text_chunk_type;
-    animation_object.animation_type = animation_type;
-    animation_object.dimension = calculate_text_chunk_length_and_height(text_chunk_type);
-    animation_object.previous_x = -1;
-    animation_object.previous_y = -1;
+    animation_object.pos = &pos;
+    animation_object.text_chunk = get_text_chunk(animation_object_type, animation_object_type_ID);
+    animation_object.update_animation = get_animation_update_function(animation_type, &animation_object);
+    Position previous_pos = { .x = -1, .y = -1 };
+    animation_object.previous_pos = &previous_pos;
     animation_object.speed = speed;
-    animation_object.x = pos->x;
-    animation_object.y = pos->y;
     animation_object.is_flipped = animation_type == CLASSIC_LEFT ? true : false;
+
+    
     correct_animation_object_bounds_error(&animation_object);
     add_animation_object_to_stack(animation_object);
 }
@@ -160,23 +160,44 @@ void remove_animation_from_stack(AnimationList *list, int index)
     list->count--;
 }
 
+ AnimationObjectGetter animation_object_linker[ANIMATION_OBJECT_TYPE_COUNT] = {
+    [FISH] = get_fish,
+    [SEAWEED] = NULL,
+    [BUBBLE] = NULL
+};
+
+
+
+void *get_animation_update_function(AnimationType animation_type, AnimationObject *animation_object)
+{
+    return animation_update_functions[animation_type](animation_object);
+}
+
+AnimationUpdateFunction animation_update_functions[ANIMATION_TYPE_COUNT] = {
+    [CLASSIC_UP]    = classic_animate_up,
+    [CLASSIC_DOWN]  = classic_animate_down,
+    [CLASSIC_RIGHT] = classic_animate_right,
+    [CLASSIC_LEFT]  = classic_animate_left
+};
+
+
 void classic_animate_up(AnimationObject *animation_object)
 {
 
-    animation_object->y = animation_object->y - animation_object->speed;
+    animation_object->pos->y = animation_object->pos->y - animation_object->speed;
 }
 
 void classic_animate_down(AnimationObject *animation_object)
 {
-    animation_object->y = animation_object->y + animation_object->speed;
+    animation_object->pos->y = animation_object->pos->y + animation_object->speed;
 }
 
 void classic_animate_right(AnimationObject *animation_object)
 {
-    animation_object->x = animation_object->x + animation_object->speed;
+    animation_object->pos->x = animation_object->pos->x + animation_object->speed;
 }
 
 void classic_animate_left(AnimationObject *animation_object)
 {
-    animation_object->x = animation_object->x - animation_object->speed;
+    animation_object->pos->x = animation_object->pos->x - animation_object->speed;
 }
