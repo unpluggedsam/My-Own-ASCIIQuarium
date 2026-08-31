@@ -23,6 +23,28 @@ int cursor_y = 0;
 int x;
 int y;
 
+
+PeriodicTask periodic_tasks[10];
+int periodic_task_count = 0;
+
+void register_periodic_task(void (*task)(void), int interval_seconds) {
+    periodic_tasks[periodic_task_count++] = (PeriodicTask){
+        .task = task,
+        .interval_seconds = interval_seconds,
+        .last_run = time(NULL)
+    };
+}
+
+void run_periodic_tasks(void) {
+    time_t now = time(NULL);
+    for (int i = 0; i < periodic_task_count; i++) {
+        if (now - periodic_tasks[i].last_run >= periodic_tasks[i].interval_seconds) {
+            periodic_tasks[i].task();
+            periodic_tasks[i].last_run = now;
+        }
+    }
+}
+
 void add_text_to_render(char text[], int x, int y)
 {
     set_cursor_on_render(x, y);
@@ -59,13 +81,15 @@ void buffer_write(const char *text)
 }
 
 void render_animation_stack(AnimationList *animation_stack) {
-    while (animation_stack->count > 0) {
+    while (1) {
+        run_periodic_tasks();
         update_animation_stack_positions(animation_stack);
         update_animation_stack_buffer(animation_stack);
         render();
         nanosleep(&delay, NULL);
     }
 }
+
 
 void update_animation_stack_buffer(AnimationList *animation_stack)
 {
@@ -103,7 +127,7 @@ void update_animation_stack_buffer(AnimationList *animation_stack)
                     i
                 );
             }
-}
+    }
 }
 
 

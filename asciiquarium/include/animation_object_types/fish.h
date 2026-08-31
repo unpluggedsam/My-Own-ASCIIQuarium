@@ -15,7 +15,7 @@ typedef enum
 
 extern char *(*fish_type_linker[FISH_TYPE_COUNT])(void);
 
-char *get_fish(FishType fish_type);
+char *get_fish(int fish_type);
 
 char *small_fish_one(void);
 char *small_fish_two(void);
@@ -23,5 +23,7 @@ char *small_fish_three(void);
 char *large_fish_one(void);
 char *large_fish_two(void);
 char *large_fish_three(void);
+
+AnimationObject create_randomized_fish(void);
 
 #endif

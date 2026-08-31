@@ -9,6 +9,7 @@
 
 
 
+
 int frame_x;
 int frame_y;
 
@@ -44,6 +45,7 @@ void build_frame(int width, int height)
 }
 
 void run_animations() {
+    register_periodic_task(run_fishies, 5); 
     render_animation_stack(&animation_stack);
 }
 
@@ -65,6 +67,11 @@ AnimationUpdateFunction get_animation_update_function(
     return animation_update_functions[animation_type];
 }
 
+void run_fishies() {
+    add_animation_object_to_stack(create_randomized_fish());
+    add_animation_object_to_stack(create_randomized_fish());
+    add_animation_object_to_stack(create_randomized_fish());
+}
 
 
 void update_animation_stack_positions(AnimationList *animation_stack)
@@ -87,33 +94,6 @@ void update_animation_stack_positions(AnimationList *animation_stack)
             object->update_animation(object);
 
     }
-}
-
-void add_randomized_fish_animations(
-    AnimationList *animation_stack,
-    int amount_of_fish
-)
-{
-    /*
-     * TODO
-     */
-    (void)animation_stack;
-    (void)amount_of_fish;
-}
-
-AnimationObject create_randomized_animation_object(AnimationObjectType animation_object_type)
-{
-    int objectID = rand() % 3; // Assuming 3 types of fish for now
-    int speed = (rand() % 3) + 1;
-    int x_pos = rand() % 1; // Random speed between 1 and 3
-    Position pos = {.x = x_pos == 0 ? 1 : frame_x - 2, .y = rand() % (frame_y - 2) + 1};
-    return create_animation_object(
-        animation_object_type,
-        objectID,
-        x_pos == 0 ? CLASSIC_RIGHT : CLASSIC_LEFT,
-        speed,
-        &pos
-    );
 }
 
 
@@ -249,12 +229,12 @@ void correct_animation_object_bounds_error(
 
         else if (p_result == Y_FAR_UP)
         {
-            animation_object->pos.y++;
+            animation_object->pos.y--;
         }
 
         else if (p_result == Y_FAR_DOWN)
         {
-            animation_object->pos.y--;
+            animation_object->pos.y++;
         }
 
 

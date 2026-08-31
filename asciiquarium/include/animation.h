@@ -3,6 +3,7 @@
 
 #include "text_chunk.h"
 #include "animation_object.h"
+#include <time.h>
 
 typedef enum
 {
@@ -112,7 +113,6 @@ AnimationObject create_animation_object(
 void correct_animation_object_bounds_error(
     AnimationObject *animation_object
 );
-
-AnimationObject create_randomized_animation_object(AnimationObjectType animation_object_type);
+void run_fishies();
 
 #endif

@@ -1,6 +1,16 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+typedef struct {
+    void (*task)(void);
+    int interval_seconds;
+    time_t last_run;
+} PeriodicTask;
+
+void register_periodic_task(void (*task)(void), int interval_seconds);
+void run_periodic_tasks(void);
+
+
 void add_text_to_render(
     char text[],
     int x,

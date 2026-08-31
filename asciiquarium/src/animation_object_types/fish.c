@@ -1,4 +1,5 @@
 #include "ASCIIQuarium.h"
+#include <stdlib.h>
 
 
 char *(*fish_type_linker[FISH_TYPE_COUNT])(void) = {
@@ -10,7 +11,30 @@ char *(*fish_type_linker[FISH_TYPE_COUNT])(void) = {
     [LARGE_FISH_THREE] = large_fish_three
 };
 
-char *get_fish(FishType fish_type) {
+AnimationObject create_randomized_fish(void) {
+    int fish_type = rand() % FISH_TYPE_COUNT;
+    int pos_x = rand() % 2; // Randomly choose left or right side
+    int speed = (rand() % 5) + 1; // Random speed between 1 and 5
+    Position pos = {
+        .x = pos_x == 0 ? 1 : frame_x - 2,
+        .y = rand() % (frame_y - 2) + 1
+    };
+
+    AnimationObject fish = create_animation_object(
+        FISH,
+        (FishType)fish_type,
+        pos_x == 0 ? CLASSIC_RIGHT : CLASSIC_LEFT,
+        speed,
+        &pos
+    );
+    return fish;
+}
+
+
+
+
+
+char *get_fish(int fish_type) {
     return fish_type_linker[fish_type]();
 }
     
