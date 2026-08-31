@@ -19,7 +19,7 @@ int main(void)
 void run_program(void) {
     srand(time(NULL));
     synchronize_coordinates();
-    build_frame(200, 50);
+    build_frame(200, 20);
     run_animations();
 }
 

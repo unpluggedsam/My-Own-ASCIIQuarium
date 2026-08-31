@@ -69,8 +69,6 @@ AnimationUpdateFunction get_animation_update_function(
 
 void run_fishies() {
     add_animation_object_to_stack(create_randomized_fish());
-    add_animation_object_to_stack(create_randomized_fish());
-    add_animation_object_to_stack(create_randomized_fish());
 }
 
 
@@ -229,12 +227,12 @@ void correct_animation_object_bounds_error(
 
         else if (p_result == Y_FAR_UP)
         {
-            animation_object->pos.y--;
+            animation_object->pos.y++;
         }
 
         else if (p_result == Y_FAR_DOWN)
         {
-            animation_object->pos.y++;
+            animation_object->pos.y--;
         }
 
 
