@@ -124,6 +124,30 @@ void run_animations(AnimationList *animation_stack)
     }
 }
 
+void update_animation_stack_positions(AnimationList *animation_stack)
+{
+    for (int i = 0; i < animation_stack->count;)
+    {
+        AnimationObject *object =
+            &animation_stack->items[i];
+
+            AnimationObject *object =
+                &animation_stack->items[i];
+
+
+            /*
+             * Save current position before updating.
+             */
+            object->previous_pos = object->pos;
+
+
+            /*
+             * Update the object's position.
+             */
+            object->update_animation(object);
+
+    }
+}
 
 void add_randomized_fish_animations(
     AnimationList *animation_stack,

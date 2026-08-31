@@ -73,7 +73,7 @@ void classic_animate_up(AnimationObject *animation_object);
 void classic_animate_down(AnimationObject *animation_object);
 
 void build_frame(int width, int height);
-
+void update_animation_stack_positions(AnimationList *animation_stack);
 
 /*
  * Function-pointer lookup table.
