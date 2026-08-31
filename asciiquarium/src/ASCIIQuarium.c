@@ -21,9 +21,9 @@ void run_program(void) {
     render();
     Position pos1 = { .x = 5, .y = 11 };
     Position pos2 = { .x = 10, .y = 1 };
-    create_animation_object(FISH, 3, CLASSIC_RIGHT, 1, &pos1);
-    create_animation_object(FISH, 4, CLASSIC_LEFT, 1, &pos2);
-    
+    create_animation_object(FISH, SMALL_FISH_TWO, CLASSIC_RIGHT, 1, &pos1);
+    //create_animation_object(SEAWEED, 4, CLASSIC_LEFT, 1, &pos2);
+
     run_animations();
     
    

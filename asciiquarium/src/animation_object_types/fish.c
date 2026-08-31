@@ -10,8 +10,8 @@ char *(*fish_type_linker[FISH_TYPE_COUNT])(void) = {
     [LARGE_FISH_THREE] = large_fish_three
 };
 
-char *get_fish(int objectID) {
-    return fish_type_linker[objectID]();
+char *get_fish(FishType fish_type) {
+    return fish_type_linker[fish_type]();
 }
     
     
