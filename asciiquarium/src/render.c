@@ -4,6 +4,10 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <sys/ioctl.h>
+
+
+
 
 #define OUTPUT_BUFFER_SIZE 10000
 
@@ -26,6 +30,23 @@ int y;
 
 PeriodicTask periodic_tasks[10];
 int periodic_task_count = 0;
+
+
+void get_terminal_size(int *width, int *height)
+{
+    struct winsize ws;
+
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1)
+    {
+        // fallback if ioctl fails (e.g. output redirected to a file)
+        *width = 80;
+        *height = 24;
+        return;
+    }
+
+    *width = ws.ws_col;
+    *height = ws.ws_row;
+}
 
 void register_periodic_task(void (*task)(void), int interval_seconds) {
     periodic_tasks[periodic_task_count++] = (PeriodicTask){

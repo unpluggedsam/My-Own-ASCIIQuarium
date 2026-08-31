@@ -45,7 +45,7 @@ void build_frame(int width, int height)
 }
 
 void run_animations() {
-    register_periodic_task(run_fishies, 5); 
+    register_periodic_task(run_fishies, 1); 
     render_animation_stack(&animation_stack);
 }
 
@@ -68,6 +68,11 @@ AnimationUpdateFunction get_animation_update_function(
 }
 
 void run_fishies() {
+    if(animation_stack.count < frame_y / 5) { 
+        for(int i = 0; i < rand() % 3; i++) { 
+            add_animation_object_to_stack(create_randomized_fish());
+        }
+    }
     add_animation_object_to_stack(create_randomized_fish());
 }
 
