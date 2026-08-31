@@ -25,4 +25,8 @@ void render(void);
 
 void synchronize_coordinates(void);
 
+void update_animation_stack_buffer(AnimationList *animation_stack);
+
+void render_animation_stack(AnimationList *animation_stack);
+
 #endif

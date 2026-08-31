@@ -3,8 +3,15 @@
 #include <termios.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 #define OUTPUT_BUFFER_SIZE 10000
+
+struct timespec delay = {
+    .tv_sec = 0,
+    .tv_nsec = 100000000
+};
+
 
 char output_buffer[OUTPUT_BUFFER_SIZE];
 int output_buffer_position = 0;
@@ -50,6 +57,57 @@ void buffer_write(const char *text)
     output_buffer_position += length;
     output_buffer[output_buffer_position] = '\0';
 }
+
+void render_animation_stack(AnimationList *animation_stack) {
+    while (animation_stack->count > 0) {
+        update_animation_stack_positions(animation_stack);
+        update_animation_stack_buffer(animation_stack);
+        render();
+        nanosleep(&delay, NULL);
+    }
+}
+
+void update_animation_stack_buffer(AnimationList *animation_stack)
+{
+    for (int i = 0; i < animation_stack->count;)
+        {
+            AnimationObject *object =
+                &animation_stack->items[i];
+
+
+            /*
+             * Remove its previous rendering.
+             */
+            delete_text_chunk(
+                object->text_chunk,
+                &object->previous_pos
+            );
+
+
+            /*
+             * Render at the new position.
+             */
+            if (
+                print_text_chunk(
+                    object->text_chunk,
+                    &object->pos
+                ) == PRINT_SUCCESS
+            )
+            {
+                i++;
+            }
+            else
+            {
+                remove_animation_from_stack(
+                    animation_stack,
+                    i
+                );
+            }
+}
+}
+
+
+
 
 void delete_text_from_render(int x, int y) {
     add_text_to_render(" ", x, y);

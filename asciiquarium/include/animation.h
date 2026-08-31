@@ -99,7 +99,7 @@ void remove_animation_from_stack(
     int index
 );
 
-void run_animations(AnimationList *animation_stack);
+void run_animations(void);
 
 void create_animation_object(
     AnimationObjectType animation_object_type,

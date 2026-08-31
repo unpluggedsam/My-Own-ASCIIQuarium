@@ -2,15 +2,10 @@
 
 #include "ASCIIQuarium.h"
 
-#include <time.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
 
-struct timespec delay = {
-    .tv_sec = 0,
-    .tv_nsec = 100000000
-};
 
 
 int frame_x;
@@ -47,6 +42,10 @@ void build_frame(int width, int height)
     add_text_to_render("+", frame_x, frame_y);
 }
 
+void run_animations() {
+    render_animation_stack(&animation_stack);
+}
+
 
 AnimationUpdateFunction animation_update_functions[
     ANIMATION_TYPE_COUNT
@@ -66,73 +65,13 @@ AnimationUpdateFunction get_animation_update_function(
 }
 
 
-void run_animations(AnimationList *animation_stack)
-{
-    while (animation_stack->count > 0)
-    {
-        for (int i = 0; i < animation_stack->count;)
-        {
-            AnimationObject *object =
-                &animation_stack->items[i];
-
-
-            /*
-             * Save current position before updating.
-             */
-            object->previous_pos = object->pos;
-
-
-            /*
-             * Update the object's position.
-             */
-            object->update_animation(object);
-
-
-            /*
-             * Remove its previous rendering.
-             */
-            delete_text_chunk(
-                object->text_chunk,
-                &object->previous_pos
-            );
-
-
-            /*
-             * Render at the new position.
-             */
-            if (
-                print_text_chunk(
-                    object->text_chunk,
-                    &object->pos
-                ) == PRINT_SUCCESS
-            )
-            {
-                i++;
-            }
-            else
-            {
-                remove_animation_from_stack(
-                    animation_stack,
-                    i
-                );
-            }
-        }
-
-        render();
-
-        nanosleep(&delay, NULL);
-    }
-}
 
 void update_animation_stack_positions(AnimationList *animation_stack)
 {
-    for (int i = 0; i < animation_stack->count;)
+    for (int i = 0; i < animation_stack->count; i++)
     {
         AnimationObject *object =
             &animation_stack->items[i];
-
-            AnimationObject *object =
-                &animation_stack->items[i];
 
 
             /*
