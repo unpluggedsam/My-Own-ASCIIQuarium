@@ -4,7 +4,8 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-
+#include <stdlib.h>
+#include <time.h>
 
 
 
@@ -100,6 +101,21 @@ void add_randomized_fish_animations(
     (void)amount_of_fish;
 }
 
+AnimationObject create_randomized_animation_object(AnimationObjectType animation_object_type)
+{
+    int objectID = rand() % 3; // Assuming 3 types of fish for now
+    int speed = (rand() % 3) + 1;
+    int x_pos = rand() % 1; // Random speed between 1 and 3
+    Position pos = {.x = x_pos == 0 ? 1 : frame_x - 2, .y = rand() % (frame_y - 2) + 1};
+    return create_animation_object(
+        animation_object_type,
+        objectID,
+        x_pos == 0 ? CLASSIC_RIGHT : CLASSIC_LEFT,
+        speed,
+        &pos
+    );
+}
+
 
 void add_animation_object_to_stack(
     AnimationObject animation_object
@@ -134,7 +150,7 @@ void add_animation_object_to_stack(
 }
 
 
-void create_animation_object(
+AnimationObject create_animation_object(
     AnimationObjectType animation_object_type,
     int animation_object_type_ID,
     AnimationType animation_type,
@@ -204,13 +220,7 @@ void create_animation_object(
         &animation_object
     );
 
-
-    /*
-     * Add a copy of the object to the stack.
-     */
-    add_animation_object_to_stack(
-        animation_object
-    );
+    return animation_object;
 }
 
 

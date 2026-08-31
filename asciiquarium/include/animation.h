@@ -101,7 +101,7 @@ void remove_animation_from_stack(
 
 void run_animations(void);
 
-void create_animation_object(
+AnimationObject create_animation_object(
     AnimationObjectType animation_object_type,
     int animation_object_type_ID,
     AnimationType animation_type,
@@ -112,5 +112,7 @@ void create_animation_object(
 void correct_animation_object_bounds_error(
     AnimationObject *animation_object
 );
+
+AnimationObject create_randomized_animation_object(AnimationObjectType animation_object_type);
 
 #endif
