@@ -1,15 +1,27 @@
+#ifndef FISH_H
+#define FISH_H
+
 typedef enum
 {
-    SMALL_FISH_ONE = 0,
-    SMALL_FISH_TWO = 1,
-    SMALL_FISH_THREE = 2,
-
-    LARGE_FISH_ONE = 3,
-    LARGE_FISH_TWO = 4,
-    LARGE_FISH_THREE = 5,
+    SMALL_FISH_ONE,
+    SMALL_FISH_TWO,
+    SMALL_FISH_THREE,
+    LARGE_FISH_ONE,
+    LARGE_FISH_TWO,
+    LARGE_FISH_THREE,
 
     FISH_TYPE_COUNT
-
 } FishType;
 
-extern char *get_fish(int objectID);
+extern char *(*fish_type_linker[FISH_TYPE_COUNT])(void);
+
+char *get_fish(int objectID);
+
+char *small_fish_one(void);
+char *small_fish_two(void);
+char *small_fish_three(void);
+char *large_fish_one(void);
+char *large_fish_two(void);
+char *large_fish_three(void);
+
+#endif
