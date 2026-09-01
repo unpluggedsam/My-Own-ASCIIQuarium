@@ -10,6 +10,7 @@ typedef struct {
 void register_periodic_task(void (*task)(void), int interval_seconds);
 void run_periodic_tasks(void);
 void get_terminal_size(int *width, int *height);
+int amount_of_object_type_in_animation_stack(AnimationList *animation_stack, AnimationObjectType animation_object_type);
 
 void add_text_to_render(
     char text[],

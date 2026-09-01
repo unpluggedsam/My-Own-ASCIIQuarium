@@ -113,6 +113,17 @@ void render_animation_stack(AnimationList *animation_stack) {
 }
 
 
+int amount_of_object_type_in_animation_stack(AnimationList *animation_stack, AnimationObjectType animation_object_type) {
+    int count = 0;
+    for (int i = 0; i < animation_stack->count; i++) {
+        if (animation_stack->items[i].animation_object_type == animation_object_type) {
+            count++;
+        }
+    }
+    return count;
+}
+
+
 void update_animation_stack_buffer(AnimationList *animation_stack)
 {
     for (int i = 0; i < animation_stack->count;)

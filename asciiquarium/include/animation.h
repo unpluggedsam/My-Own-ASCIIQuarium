@@ -11,7 +11,7 @@ typedef enum
     CLASSIC_RIGHT,
     CLASSIC_UP,
     CLASSIC_DOWN,
-    CLASSIC_STATIC,
+    SEAWEED_SWAY,
 
     ANIMATION_TYPE_COUNT
 } AnimationType;
@@ -74,6 +74,7 @@ void classic_animate_left(AnimationObject *animation_object);
 void classic_animate_right(AnimationObject *animation_object);
 void classic_animate_up(AnimationObject *animation_object);
 void classic_animate_down(AnimationObject *animation_object);
+void seaweed_sway(AnimationObject *animation_object);
 
 void build_frame(int width, int height);
 void update_animation_stack_positions(AnimationList *animation_stack);

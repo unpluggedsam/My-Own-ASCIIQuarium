@@ -131,7 +131,7 @@ BoundsResult check_out_of_bounds_direction(
         return X_FAR_RIGHT;
     }
 
-    if (pos->y + dimension.height >= frame_y - 5)
+    if (pos->y + dimension.height >= frame_y)
     {
         return Y_FAR_DOWN;
     }

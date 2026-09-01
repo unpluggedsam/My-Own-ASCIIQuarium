@@ -46,7 +46,7 @@ void build_frame(int width, int height)
 
 void run_animations() {
     register_periodic_task(add_random_fishes_to_stack, 1); 
-    register_periodic_task(add_random_seaweeds_to_stack, 200);
+    register_periodic_task(add_random_seaweeds_to_stack, 1);
     register_periodic_task(add_random_bubbles_to_stack, 1);
     render_animation_stack(&animation_stack);
 }
@@ -58,7 +58,8 @@ AnimationUpdateFunction animation_update_functions[
     [CLASSIC_LEFT]  = classic_animate_left,
     [CLASSIC_RIGHT] = classic_animate_right,
     [CLASSIC_UP]    = classic_animate_up,
-    [CLASSIC_DOWN]  = classic_animate_down
+    [CLASSIC_DOWN]  = classic_animate_down,
+    [SEAWEED_SWAY]  = seaweed_sway
 };
 
 
@@ -70,7 +71,7 @@ AnimationUpdateFunction get_animation_update_function(
 }
 
 void add_random_fishes_to_stack() {
-    if(animation_stack.count < frame_y / 5) { 
+    if(amount_of_object_type_in_animation_stack(&animation_stack, FISH) < frame_y / 5) { 
         for(int i = 0; i < rand() % 3; i++) { 
             add_animation_object_to_stack(create_randomized_fish());
         }
@@ -78,13 +79,13 @@ void add_random_fishes_to_stack() {
 }
 
 void add_random_seaweeds_to_stack() {
-    for(int i = 0; i < rand() % 5; i++) { 
-        add_animation_object_to_stack(create_randomized_seaweed());
+    while(amount_of_object_type_in_animation_stack(&animation_stack, SEAWEED) < frame_x / 10) {
+            add_animation_object_to_stack(create_randomized_seaweed());
     }
 }
 
 void add_random_bubbles_to_stack() {
-    if(animation_stack.count < frame_x / 2) { 
+    if(amount_of_object_type_in_animation_stack(&animation_stack, BUBBLE) < frame_x / 2) { 
         for(int i = 0; i < rand() % 5; i++) { 
             add_animation_object_to_stack(create_randomized_bubble());
         }
@@ -287,6 +288,16 @@ AnimationObjectGetter animation_object_linker[
     [SEAWEED] = get_seaweed,
     [BUBBLE]  = get_bubble
 };
+
+
+void seaweed_sway(AnimationObject *animation_object)
+{
+    int direction = (rand() % 2) * 2 - 1;  // yields -1 or 1
+
+    animation_object->pos.x +=
+        (animation_object->speed * direction);
+   
+}
 
 
 void classic_animate_up(
