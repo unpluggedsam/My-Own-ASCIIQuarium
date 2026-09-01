@@ -11,6 +11,7 @@ typedef enum
     CLASSIC_RIGHT,
     CLASSIC_UP,
     CLASSIC_DOWN,
+    CLASSIC_STATIC,
 
     ANIMATION_TYPE_COUNT
 } AnimationType;
@@ -49,6 +50,7 @@ struct AnimationObject
     int speed;
 
     TextDimension dimension;
+    AnimationObjectType animation_object_type;
 };
 
 
@@ -75,6 +77,9 @@ void classic_animate_down(AnimationObject *animation_object);
 
 void build_frame(int width, int height);
 void update_animation_stack_positions(AnimationList *animation_stack);
+
+void add_random_seaweeds_to_stack();
+void add_random_bubbles_to_stack() ;
 
 /*
  * Function-pointer lookup table.
@@ -113,6 +118,6 @@ AnimationObject create_animation_object(
 void correct_animation_object_bounds_error(
     AnimationObject *animation_object
 );
-void run_fishies();
+void add_random_fishes_to_stack();
 
 #endif

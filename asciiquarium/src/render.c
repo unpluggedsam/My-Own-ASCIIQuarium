@@ -64,6 +64,7 @@ void run_periodic_tasks(void) {
             periodic_tasks[i].last_run = now;
         }
     }
+
 }
 
 void add_text_to_render(char text[], int x, int y)

@@ -45,7 +45,9 @@ void build_frame(int width, int height)
 }
 
 void run_animations() {
-    register_periodic_task(run_fishies, 1); 
+    register_periodic_task(add_random_fishes_to_stack, 1); 
+    register_periodic_task(add_random_seaweeds_to_stack, 200);
+    register_periodic_task(add_random_bubbles_to_stack, 1);
     render_animation_stack(&animation_stack);
 }
 
@@ -67,14 +69,28 @@ AnimationUpdateFunction get_animation_update_function(
     return animation_update_functions[animation_type];
 }
 
-void run_fishies() {
+void add_random_fishes_to_stack() {
     if(animation_stack.count < frame_y / 5) { 
         for(int i = 0; i < rand() % 3; i++) { 
             add_animation_object_to_stack(create_randomized_fish());
         }
     }
-    add_animation_object_to_stack(create_randomized_fish());
 }
+
+void add_random_seaweeds_to_stack() {
+    for(int i = 0; i < rand() % 5; i++) { 
+        add_animation_object_to_stack(create_randomized_seaweed());
+    }
+}
+
+void add_random_bubbles_to_stack() {
+    if(animation_stack.count < frame_x / 2) { 
+        for(int i = 0; i < rand() % 5; i++) { 
+            add_animation_object_to_stack(create_randomized_bubble());
+        }
+    }
+}
+
 
 
 void update_animation_stack_positions(AnimationList *animation_stack)
@@ -155,6 +171,8 @@ AnimationObject create_animation_object(
 
 
     animation_object.speed = speed;
+
+    animation_object.animation_object_type = animation_object_type;
 
 
     /*
@@ -266,8 +284,8 @@ AnimationObjectGetter animation_object_linker[
     ANIMATION_OBJECT_TYPE_COUNT
 ] = {
     [FISH]    = get_fish,
-    [SEAWEED] = NULL,
-    [BUBBLE]  = NULL
+    [SEAWEED] = get_seaweed,
+    [BUBBLE]  = get_bubble
 };
 
 
